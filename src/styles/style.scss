@@ -1,0 +1,11 @@
+@import "./partials/book";
+@import "./partials/header";
+
+* {
+  margin: 0;
+}
+
+#root {
+  background-color: #e9e8e2;
+  min-height: 100vh; //temporary
+}

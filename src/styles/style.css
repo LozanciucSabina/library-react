@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Piazzolla:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;1,200;1,300&display=swap");
+header {
+  background-color: #19220f;
+  -webkit-box-shadow: 0px 5px 10px 0px #c9c9c9;
+          box-shadow: 0px 5px 10px 0px #c9c9c9;
+  margin-bottom: 20px;
+  color: #d34408;
+}
+
+header nav {
+  height: 5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-item-align: center;
+      align-self: center;
+}
+
+header h1,
+header .logo {
+  display: inline;
+  font-family: "Piazzolla", serif;
+  cursor: default;
+}
+
+header a {
+  color: #c4bb9a;
+  text-decoration: none;
+  font-family: "Raleway", sans-serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+header a:hover {
+  text-decoration: underline;
+}
+
+* {
+  margin: 0;
+}
+
+#root {
+  background-color: #e9e8e2;
+  min-height: 100vh;
+}
+/*# sourceMappingURL=style.css.map */
