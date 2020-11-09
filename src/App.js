@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Book from "./components/Book/Book";
 import Header from "./components/Header/Header";
 import Cards from "./components/Cards/Cards";
+import Sidebar from "./components/Sidebar/Sidebar";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import "./styles/style.css";
@@ -34,6 +35,8 @@ export default class App extends Component {
           <Route exact path="/">
             <Cards books={this.state.books} />
           </Route>
+
+          <Sidebar books={this.state.books} />
 
           <Switch>
             {this.state.books.map((book) => {
