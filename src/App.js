@@ -4,15 +4,25 @@ import Book from "./components/Book/Book";
 import Header from "./components/Header/Header";
 import Cards from "./components/Cards/Cards";
 import Sidebar from "./components/Sidebar/Sidebar";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import "./styles/style.css";
 import { db } from "./base";
+import "./styles/style.css";
 
 export default class App extends Component {
-  state = {
-    books: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      books: [],
+      filters: {
+        author: [],
+        publisher: [],
+        categories: [],
+        year: [],
+        language: [],
+      },
+    };
+  }
 
   async componentDidMount() {
     const books = await db
@@ -26,29 +36,79 @@ export default class App extends Component {
     this.setState({ books: booksWithUrl });
   }
 
+  handleFilterChange({ target: { id, name, checked } }) {
+    const getFilterData = () => {
+      const filter = [...this.state.filters[name]];
+
+      if (checked) {
+        filter.push(id);
+      } else {
+        filter.splice(filter.indexOf(id), 1);
+      }
+
+      return filter;
+    };
+
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        [name]: getFilterData(),
+      },
+    });
+  }
+
+  selectBooksByCheckedFilters(filters) {
+    const { books } = this.state;
+    const booksToBeDisplayed = [];
+    for (let key in filters) {
+      console.log(Boolean(!filters[key].length === false));
+      if (!filters[key].length === false) {
+        console.log("key:", key);
+        console.log("filters[key]:", filters[key]);
+        books.forEach((book) => {
+          if (!booksToBeDisplayed.includes(book)) {
+            console.log(booksToBeDisplayed);
+            if (filters[key].includes(String(book[key]))) {
+              // console.log("in if:", filters[key].includes(book[key]));
+              // console.log("book", book);
+              booksToBeDisplayed.push(book);
+            }
+          }
+        });
+        console.log("------------");
+      }
+    }
+    // console.log(booksToBeDisplayed);
+    // console.log("--------------");
+    return booksToBeDisplayed;
+  }
+
   render() {
+    const { books, filters } = this.state;
+    // console.log(books, filters);
+    // this.selectBooksByCheckedFilters(this.state.filters);
+    // console.log("books from function", this.selectBooksByCheckedFilters());
     return (
-      <>
-        <Router>
-          <Header />
+      <Router>
+        <Header />
 
-          <Route exact path="/">
-            <Cards books={this.state.books} />
-          </Route>
+        <Route exact path="/">
+          <Cards books={this.selectBooksByCheckedFilters(this.state.filters)} />
+          <Sidebar
+            books={books}
+            filters={filters}
+            handleFilterChange={(e) => this.handleFilterChange(e)}
+          />
+        </Route>
 
-          <Sidebar books={this.state.books} />
-
-          <Switch>
-            {this.state.books.map((book) => {
-              return (
-                <Route path={book.url} key={book.title}>
-                  <Book {...book} />
-                </Route>
-              );
-            })}
-          </Switch>
-        </Router>
-      </>
+        {this.state.books.map((book) => {
+          return (
+            <Route path={book.url} key={book.title}>
+              <Book {...book} />
+            </Route>
+          );
+        })}
+      </Router>
     );
   }
 }

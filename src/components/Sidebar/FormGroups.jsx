@@ -12,26 +12,7 @@ class FormGroups extends Component {
     const { formLabel, name, label, handleChange, checked } = this.props;
 
     return (
-       {for(let key in obj){
-        
-          {<FormLabel>{key}</FormLabel>
-          <FormGroup>
-
-          {obj.key.map(categ =>(
-            
-          <FormControlLabel
-            control={
-              <Checkbox checked={checked} onChange={handleChange} name={categ} />
-            }
-            label={label}
-          />
-        
-           ) )}
-           </FormGroup>
-          }
-
-        
-      }}
+      <>
         <FormLabel>{formLabel}</FormLabel>
         <FormGroup>
           <FormControlLabel
@@ -41,7 +22,7 @@ class FormGroups extends Component {
             label={label}
           />
         </FormGroup>
-      
+      </>
     );
   }
 }

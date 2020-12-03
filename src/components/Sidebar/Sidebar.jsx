@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Paper } from "@material-ui/core";
+import { FormControl, Paper } from "@material-ui/core";
 
 import {
   FormLabel,
@@ -10,67 +10,69 @@ import {
 } from "@material-ui/core";
 
 class Sidebar extends Component {
+  constructor(props) {
+    super(props);
+    this.extractGlobalKeys = this.extractGlobalKeys.bind(this);
+  }
+
+  extractGlobalKeys(arrayOfKeysToBeExcluded, source) {
+    let allKeys = [];
+
+    source.forEach((item) => (allKeys = [...allKeys, ...Object.keys(item)]));
+
+    let uniqueKeys = new Set(allKeys);
+
+    uniqueKeys = [...uniqueKeys];
+
+    let arrayOfObjectsOfKeys = [];
+
+    uniqueKeys
+      .filter((key) => !arrayOfKeysToBeExcluded.includes(key))
+      .forEach((key) => arrayOfObjectsOfKeys.push({ name: key, options: [] }));
+
+    arrayOfObjectsOfKeys.forEach((object) => {
+      source.forEach((item) => {
+        if (!object.options.includes(item[object.name])) {
+          object.options.push(item[object.name]);
+        }
+      });
+      object.options.sort();
+    });
+    return arrayOfObjectsOfKeys;
+  }
+
   render() {
     const { books } = this.props;
 
-    let keysSet = [];
-    let filteredKeys = [];
-    books.forEach((book) => {
-      let allKeys = Object.keys(book);
-      filteredKeys = allKeys.filter(
-        (key) =>
-          key === "publisher" ||
-          key === "year" ||
-          key === "categories" ||
-          key === "author"
-      );
-
-      filteredKeys.forEach((key) => {
-        if (!keysSet.includes(key)) {
-          keysSet.push(key);
-        }
-      });
-    });
-
-    let categories = {};
-
-    filteredKeys.map((key) => (categories[key] = []));
-
-    filteredKeys.forEach((key) =>
-      books.forEach((book) => {
-        if (!categories[key].includes(book[key])) {
-          if (typeof book[key] === "string") {
-            if (book[key].includes(",") || book[key].includes("and")) {
-              let separator = book[key].includes(",") ? "," : "and";
-              let splitComposedCategory = book[key].split(separator);
-              splitComposedCategory.forEach((category) => {
-                categories[key].push(category.trim());
-              });
-            } else {
-              categories[key].push(book[key]);
-            }
-          } else categories[key].push(book[key]);
-        }
-      })
+    const arrayOfObjKeys = this.extractGlobalKeys(
+      ["title", "description", "image", "url", "pages"],
+      books
     );
 
-    return null;
-    // {
-    //   for(let key in categories){
-    //     <Paper>
-    //       <FormLabel>{key}</FormLabel>
-    //       <FormGroup>
-    //       {categories.key.map(category =>
-    //         <FormControlLabel
-    //             control={
-    //               <Checkbox checked="true" onChange="function" name={category} />
-    //             }
-    //             label={category}
-    //           />)}
-    //       </FormGroup>
-    //     </Paper>
-    //     }
-    // }
+    return (
+      <Paper>
+        {arrayOfObjKeys.map(({ name, options }) => (
+          <FormControl key={name}>
+            <FormLabel>{name}</FormLabel>
+            <FormGroup>
+              {options.map((option) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      onChange={this.props.handleFilterChange}
+                      name={`${name}`}
+                      id={`${option}`}
+                    />
+                  }
+                  label={option}
+                  key={option}
+                />
+              ))}
+            </FormGroup>
+          </FormControl>
+        ))}
+      </Paper>
+    );
   }
 }
 
