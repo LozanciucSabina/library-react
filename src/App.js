@@ -69,25 +69,18 @@ export default class App extends Component {
           if (!booksToBeDisplayed.includes(book)) {
             console.log(booksToBeDisplayed);
             if (filters[key].includes(String(book[key]))) {
-              // console.log("in if:", filters[key].includes(book[key]));
-              // console.log("book", book);
               booksToBeDisplayed.push(book);
             }
           }
         });
-        console.log("------------");
       }
     }
-    // console.log(booksToBeDisplayed);
-    // console.log("--------------");
+
     return booksToBeDisplayed;
   }
 
   render() {
     const { books, filters } = this.state;
-    // console.log(books, filters);
-    // this.selectBooksByCheckedFilters(this.state.filters);
-    // console.log("books from function", this.selectBooksByCheckedFilters());
     return (
       <Router>
         <Header />
